@@ -1,0 +1,37 @@
+---
+import { X } from '@lucide/astro'
+---
+
+<aside
+  :inert="!chatOpen"
+  :aria-hidden="!chatOpen"
+  id="sidebar-chat"
+  aria-labelledby="sidebar-chat-title"
+  class="sticky top-0 h-screen min-w-0 overflow-hidden bg-white"
+>
+  <div class="flex h-full min-w-0 flex-col border-l border-slate-200">
+    <header
+      class="flex items-center justify-between border-b border-slate-200 px-5 py-2"
+    >
+      <h2 id="sidebar-chat-title" class="font-headline text-lg font-semibold">
+        BSV Copilot
+      </h2>
+
+      <button
+        type="button"
+        @click="chatOpen = false"
+        aria-label="Chat schließen"
+        class="rounded-sm p-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-primary"
+      >
+        <X size={20} aria-hidden="true" />
+      </button>
+    </header>
+
+    <div class="min-h-0 flex-1">
+      <iframe
+        src="https://bsv-trainer.vercel.app/iframe"
+        title="BSV Copilot"
+        class="h-full w-full border-0"></iframe>
+    </div>
+  </div>
+</aside>

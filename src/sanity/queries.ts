@@ -21,8 +21,14 @@ export async function getUnits() {
   const getUnitsQuery = defineQuery(`
   *[_type == 'title'] | order(number asc) {
   number,
+  "description": description.de,
   "title": name.de,
-  "chapters": *[_type=='chapter' && references(^._id)] | order(number asc) { name, number }
+  "color": { "hex": color.hex, "lightness": color.hsl.l },
+  "startArt": *[_type == "article" && references(^._id)] | order(number asc)[0].number,
+  "endArt": *[_type == "article" && references(^._id)] | order(number desc)[0].number,
+  "chapters": *[_type=='chapter' && references(^._id)] | order(number asc) { name, number,
+  "startArt": *[_type == "article" && references(^._id)] | order(number asc)[0].number,
+  "endArt": *[_type == "article" && references(^._id)] | order(number desc)[0].number, }
 }`)
   return client.fetch(getUnitsQuery)
 }
@@ -30,7 +36,7 @@ export async function getUnits() {
 export async function getTitles() {
   const getTitlesQuery = defineQuery(`
   *[_type == "title"] | order(number asc)
-  {..., desc {${parsePortableText}},
+  {...,
     "chapters": *[_type=='chapter' && references(^._id)] | order(number asc) { name, number },
     "sections": *[_type == "section" && references(^._id) && !defined(chapter)] | order(number asc) { number, name, "articles": *[_type == "article" && references(^._id)] | order(number asc) ${articleProjection} },
     "articles": *[_type == 'article' && references(^._id) && !defined(chapter)] | order(number asc)
